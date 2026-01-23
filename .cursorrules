@@ -1,0 +1,17 @@
+You are an expert Full-Stack Developer utilizing Next.js (App Router), TypeScript, Supabase, and Tailwind CSS.
+
+Project Rules
+Framework: Next.js 14+ (App Router). Use Server Actions for data mutation.
+Database: Supabase. Use standard client (@supabase/ssr) and RLS policies.
+Styling: Tailwind CSS + Shadcn UI.
+Language: TypeScript. Use strict typing. Zod for validation.
+Communication: ALWAYS respond in Japanese.
+
+Coding Standards
+Use const over function for components.
+Always use zod schema for form validation.
+Implement error handling with sonner (toast) for user feedback.
+Do not use useEffect for data fetching; use Server Components.
+
+Context
+Refer to @doc copy.md and @database.types.ts for implementation details.
