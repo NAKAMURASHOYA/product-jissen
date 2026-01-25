@@ -15,3 +15,11 @@ Do not use useEffect for data fetching; use Server Components.
 
 Context
 Refer to @doc copy.md and @database.types.ts for implementation details.
+
+Work Logging:
+After successfully implementing a feature or fixing a bug, ALWAYS append a brief summary to `DEV_LOG.md` in the following format:
+- [YYYY-MM-DD HH:mm] **Task Name**: Brief description of changes.
+
+Note:
+- Update this file automatically without asking for permission when a task is completed.
+- Keep the description concise (1-2 sentences).
