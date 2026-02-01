@@ -174,3 +174,94 @@
 2. メンバー一覧画面の実装
 3. 感謝送信機能の実装
 4. プロフィール編集機能の実装
+
+## 2025-01-28
+
+### 組織ホーム画面・メンバー一覧・感謝送信機能の実装
+
+#### 完了した作業
+
+1. **組織ホーム画面の実装**
+   - `src/app/slug/page.tsx` - 組織ダッシュボードページ
+     - 今月の感謝数、タイムライン、人気スキルのカード表示
+   - `src/app/slug/layout.tsx` - 組織コンテキストのレイアウト
+     - サイドバーナビゲーション（ホーム、メンバー、設定）
+     - 所属組織の切り替え機能
+     - ログアウトボタン
+     - ログインチェック・メンバーシップチェック
+     - モバイル対応ヘッダー
+
+2. **メンバー一覧画面の実装**
+   - `src/app/slug/members/page.tsx` - メンバー一覧ページ
+     - 組織メンバーをカード形式で表示
+     - アバター、表示名、ロール、メールアドレスの表示
+     - `next/image` の `Image` コンポーネントを使用（最適化）
+
+3. **感謝送信機能の実装**
+   - `src/actions/endorsement.ts` - 感謝送信Server Action
+     - `endorseUserAction`: 感謝とスキルを送信
+     - RPC関数 `endorse_user` を呼び出し
+     - バリデーション、自分自身への送信チェック
+     - キャッシュ更新（revalidatePath）
+   - `src/lib/schema.ts` - バリデーションスキーマ追加
+     - `endorsementSchema`: 感謝送信用のZodスキーマ
+     - `EndorsementInput` 型のエクスポート追加
+   - `src/components/ui/endorsement/send-dialog.tsx` - 感謝送信ダイアログ
+     - メンバー選択（自分以外）
+     - スキル名入力
+     - メッセージ入力（任意）
+
+4. **Shadcn UIコンポーネントの追加**
+   - `dialog` - モーダルダイアログ
+   - `select` - セレクトボックス
+   - `textarea` - テキストエリア
+
+#### バグ修正・コード品質改善
+
+1. **不要なテキストの削除**
+   - `src/app/slug/page.tsx` から説明文とコードブロック終了マーカーを削除
+
+2. **TypeScript型エラーの修正**
+   - `src/app/slug/layout.tsx`: 型アサーション追加 `org = organization as { id, name, slug }`
+   - `src/app/slug/members/page.tsx`: 型アサーション追加 `org = organization as { id, name }`
+   - `src/actions/endorsement.ts`: RPC関数に `@ts-expect-error` 追加
+
+3. **ESLint警告の修正**
+   - `src/app/slug/members/page.tsx`: `<img>` → `<Image />` (next/image) に変更
+
+4. **暗黙的any型の修正**
+   - `src/components/ui/endorsement/send-dialog.tsx`: `(val)` → `(val: string)` に変更
+
+#### ファイル構成
+
+```
+src/
+├── actions/
+│   ├── auth.ts
+│   ├── organization.ts
+│   └── endorsement.ts (新規)
+├── app/
+│   ├── slug/
+│   │   ├── layout.tsx (新規)
+│   │   ├── page.tsx (新規)
+│   │   └── members/
+│   │       └── page.tsx (新規)
+│   └── ...
+├── components/
+│   └── ui/
+│       ├── endorsement/
+│       │   └── send-dialog.tsx (新規)
+│       ├── dialog.tsx (新規)
+│       ├── select.tsx (新規)
+│       ├── textarea.tsx (新規)
+│       └── ...
+└── lib/
+    └── schema.ts (EndorsementInput追加)
+```
+
+#### 次のステップ
+
+1. タイムライン表示の実装（感謝履歴の表示）
+2. プロフィール編集機能の実装
+3. 組織設定画面の実装
+4. 招待コード発行機能の実装

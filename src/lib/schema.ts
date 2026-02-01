@@ -56,7 +56,15 @@ export const profileSchema = z.object({
 export type ProfileInput = z.infer<typeof profileSchema>
 
 // スキルタグ (Skills) - 設計書より
-export const skillCategoryEnum = z.enum(['frontend', 'backend', 'design', 'other'])
+export const skillCategoryEnum = z.enum([
+  'frontend',
+  'backend',
+  'design',
+  'sales',
+  'marketing',
+  'office work',
+  'other',
+])
 
 export const skillTagSchema = z.object({
   id: z.string().uuid().optional(),
@@ -68,4 +76,18 @@ export const skillTagSchema = z.object({
   score: z.number().int().min(1).max(5).default(1),
 })
 
+// 感謝送信 (Endorsement)
+export const endorsementSchema = z.object({
+  receiverId: z.string().uuid({ message: "宛先を選択してください" }),
+  skillName: z
+    .string()
+    .min(1, { message: "スキル名を入力してください" })
+    .max(50, { message: "スキル名は50文字以内で入力してください" }),
+  message: z
+    .string()
+    .max(200, { message: "メッセージは200文字以内で入力してください" })
+    .optional(),
+})
+
 export type SkillTagInput = z.infer<typeof skillTagSchema>
+export type EndorsementInput = z.infer<typeof endorsementSchema>
