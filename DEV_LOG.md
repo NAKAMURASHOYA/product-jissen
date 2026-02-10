@@ -265,3 +265,37 @@ src/
 2. プロフィール編集機能の実装
 3. 組織設定画面の実装
 4. 招待コード発行機能の実装
+
+## 2026-02-11
+
+### ルーティング整理とミドルウェア・UI強化
+
+#### 完了した作業
+
+1. **組織スラッグルーティングの改善**
+   - `src/app/slug/*` を削除し、動的セグメントディレクトリ `src/app/[slug]/` 配下にページを移動
+   - 組織ホーム: `src/app/[slug]/page.tsx`
+   - 組織レイアウト: `src/app/[slug]/layout.tsx`
+   - メンバー一覧: `src/app/[slug]/members/page.tsx`
+   - URL構造をNext.jsの推奨パターンに合わせつつ、これまでの機能（ログインチェック・メンバーシップチェック・サイドバー・メンバー一覧カード表示）を維持
+
+2. **Supabaseミドルウェアの追加**
+   - `src/lib/supabase/middleware.ts` を新規作成し、`createServerClient` を使ったセッション更新処理 `updateSession` を実装
+   - `src/middleware.ts` で `updateSession` を呼び出す共通ミドルウェアを定義
+   - 静的ファイルや画像を除くほぼ全てのリクエストでSupabaseセッションが適切に更新されるように設定
+
+3. **タイムライン表示用UIコンポーネントの追加**
+   - `src/components/ui/timeline/timeline-item.tsx` を追加し、感謝（endorsement）1件分を表示するカードコンポーネントを実装
+   - 送信者・受信者のアバター／名前、スキルバッジ、メッセージ、相対時間（◯分前／◯日前など）を表示
+   - `Avatar` と `Badge` コンポーネント（`src/components/ui/avatar.tsx`, `src/components/ui/badge.tsx`）を利用してShadcn UIと統一感のあるデザインに調整
+
+4. **共通設定・依存パッケージの追加**
+   - `tsconfig.json` に `"baseUrl": "."` を追加し、ルートからの絶対インポート設定を明示
+   - 相対パス記述を減らし、パス解決の一貫性を向上
+   - `date-fns` を依存ライブラリとして追加し、`formatDistanceToNow` と日本語ロケール(`ja`)を用いてタイムラインの相対時間表示を実装
+
+#### 次のステップ
+
+1. タイムライン一覧ページへの `TimelineItem` 組み込みと実データ連携
+2. 組織設定画面・プロフィール編集画面からのナビゲーション導線整備
+3. ミドルウェアの挙動確認（ログイン状態の切り替えやセッション有効期限まわり）
