@@ -12,7 +12,8 @@ type ActionResponse = {
 
 export async function endorseUserAction(
   data: EndorsementInput,
-  organizationId: string
+  organizationId: string,
+  orgSlug: string
 ): Promise<ActionResponse> {
   const supabase = createClient()
   
@@ -56,7 +57,7 @@ export async function endorseUserAction(
   }
 
   // 5. キャッシュ更新（タイムライン表示などを最新にするため）
-  revalidatePath(`/[slug]`, 'layout') 
+  revalidatePath(`/${orgSlug}`)
 
   return { success: true, message: "感謝を送りました！" }
 }

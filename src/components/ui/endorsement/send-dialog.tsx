@@ -28,6 +28,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { Badge } from "@/components/ui/badge"
 
 type User = {
   id: string
@@ -37,11 +38,19 @@ type User = {
 
 type Props = {
   organizationId: string
+  orgSlug: string
   members: User[]
   currentUserId: string
+  suggestedSkills?: string[]
 }
 
-export function SendEndorsementDialog({ organizationId, members, currentUserId }: Props) {
+export function SendEndorsementDialog({
+  organizationId,
+  orgSlug,
+  members,
+  currentUserId,
+  suggestedSkills = [],
+}: Props) {
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
 
@@ -52,16 +61,30 @@ export function SendEndorsementDialog({ organizationId, members, currentUserId }
     register,
     handleSubmit,
     setValue,
+    watch,
     reset,
     formState: { errors },
   } = useForm<EndorsementInput>({
     resolver: zodResolver(endorsementSchema),
   })
 
+  const skillNameValue = watch("skillName") ?? ""
+
+  // 入力値に基づいてサジェストをフィルタリング
+  const filteredSuggestions = skillNameValue.trim().length === 0
+    ? suggestedSkills.slice(0, 6)
+    : suggestedSkills
+        .filter(
+          (s) =>
+            s.toLowerCase().includes(skillNameValue.toLowerCase()) &&
+            s.toLowerCase() !== skillNameValue.toLowerCase()
+        )
+        .slice(0, 6)
+
   const onSubmit = (data: EndorsementInput) => {
     startTransition(async () => {
       try {
-        const res = await endorseUserAction(data, organizationId)
+        const res = await endorseUserAction(data, organizationId, orgSlug)
         if (res.success) {
           toast.success(res.message)
           setOpen(false)
@@ -119,6 +142,26 @@ export function SendEndorsementDialog({ organizationId, members, currentUserId }
               placeholder="例: React, メンタリング, 資料作成"
               {...register("skillName")}
             />
+            {/* スキルサジェスト */}
+            {filteredSuggestions.length > 0 && (
+              <div className="space-y-1.5">
+                <p className="text-xs text-muted-foreground">
+                  {skillNameValue.trim() ? "候補:" : "よく使われるスキル:"}
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {filteredSuggestions.map((skill) => (
+                    <Badge
+                      key={skill}
+                      variant="outline"
+                      className="cursor-pointer hover:bg-primary/10 hover:border-primary/40 text-xs"
+                      onClick={() => setValue("skillName", skill, { shouldValidate: true })}
+                    >
+                      # {skill}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
             {errors.skillName && (
               <p className="text-sm text-destructive">{errors.skillName.message}</p>
             )}
