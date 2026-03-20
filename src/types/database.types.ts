@@ -349,26 +349,35 @@ export type Database = {
       users: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           created_at: string
+          display_id: string | null
           display_name: string | null
           email: string
           id: string
+          tagline: string | null
           updated_at: string
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
+          display_id?: string | null
           display_name?: string | null
           email: string
           id: string
+          tagline?: string | null
           updated_at?: string
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
+          display_id?: string | null
           display_name?: string | null
           email?: string
           id?: string
+          tagline?: string | null
           updated_at?: string
         }
         Relationships: []

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build 2>&1 | tail -40)",
+      "Bash(npx tsc --noEmit 2>&1 | head -50)",
+      "Bash(ls /mnt/c/Users/Shoya/Documents/techtrain/step3-react/techtrain-step3-common/product-jissen/src/app/\\\\[slug\\\\]/)"
+    ]
+  }
+}
