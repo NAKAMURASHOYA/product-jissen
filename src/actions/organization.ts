@@ -29,7 +29,6 @@ export async function createOrganizationAction(formData: FormData): Promise<Acti
 
   // RPC: create_new_organization を呼び出し
   // Note: p_org_name, p_org_slug はDB側の関数定義に合わせる必要があるため、略語(org)のままとしています
-  // @ts-expect-error - Supabase RPC型定義が正しく推論されない場合の暫定対応
   const { data: organizationId, error } = await supabase.rpc('create_new_organization', {
     p_org_name: name,
     p_org_slug: slug,
@@ -67,7 +66,6 @@ export async function joinOrganizationAction(formData: FormData): Promise<Action
 
   // RPC: join_organization_by_code を呼び出し
   // Note: p_invite_code, p_user_id はDB側の関数定義に合わせる必要があります
-  // @ts-expect-error - Supabase RPC型定義が正しく推論されない場合の暫定対応
   const { data: organizationId, error } = await supabase.rpc('join_organization_by_code', {
     p_invite_code: code,
     p_user_id: user.id

@@ -3,7 +3,16 @@
     "allow": [
       "Bash(npm run build 2>&1 | tail -40)",
       "Bash(npx tsc --noEmit 2>&1 | head -50)",
-      "Bash(ls /mnt/c/Users/Shoya/Documents/techtrain/step3-react/techtrain-step3-common/product-jissen/src/app/\\\\[slug\\\\]/)"
+      "Bash(ls /mnt/c/Users/Shoya/Documents/techtrain/step3-react/techtrain-step3-common/product-jissen/src/app/\\\\[slug\\\\]/)",
+      "Bash(npx shadcn-ui@latest add tabs --yes 2>&1)",
+      "Bash(npx shadcn@latest add tabs --yes 2>&1)",
+      "Bash(npx tsc --noEmit 2>&1)",
+      "Bash(find /mnt/c/Users/Shoya/Documents/techtrain/step3-react/techtrain-step3-common/product-jissen/node_modules/@supabase/postgrest-js -name \"*.d.ts\" 2>/dev/null | head -5; ls /mnt/c/Users/Shoya/Documents/techtrain/step3-react/techtrain-step3-common/product-jissen/node_modules/@supabase/postgrest-js/)",
+      "Bash(find /mnt/c/Users/Shoya/Documents/techtrain/step3-react/techtrain-step3-common/product-jissen/node_modules/@supabase/supabase-js -name \"*.d.ts\" 2>/dev/null | head -5)",
+      "Bash(npm show @supabase/ssr versions --json 2>/dev/null | tail -1 | tr ',' '\\\\n' | grep -E '\"0\\\\.[56789]|\"1\\\\.' | tail -10)",
+      "Bash(npm show @supabase/ssr dist-tags 2>/dev/null)",
+      "Bash(npm install @supabase/ssr@0.9.0 --save-exact 2>&1)",
+      "Bash(npm install @supabase/ssr@0.6.1 @supabase/supabase-js@2.45.4 2>&1)"
     ]
   }
 }

@@ -1,0 +1,7 @@
+A	.claude/settings.local.json
+A	.sys_git_status.txt
+M	DEV_LOG.md
+A	src/actions/profile.ts
+A	src/app/[slug]/settings/page.tsx
+A	src/app/[slug]/settings/profile-form.tsx
+M	src/types/database.types.ts

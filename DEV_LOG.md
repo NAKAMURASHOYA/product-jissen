@@ -334,3 +334,22 @@ src/
 ## 2026-03-21
 
 - [2026-03-21 00:00] **プロフィール設定機能の実装**: `users`テーブルに`display_id`/`tagline`/`bio`の型定義を追加し、`updateProfileAction`（`display_id`重複エラーハンドリング含む）・`ProfileForm`クライアントコンポーネント・`/[slug]/settings`設定ページを新規作成した。
+
+## 2026-03-23
+
+### 組織設定画面と招待コード管理機能の実装
+
+#### 完了した作業
+
+1. **組織設定タブUIの実装**
+   - Shadcn UIの `Tabs` コンポーネントを導入
+   - `src/app/[slug]/settings/page.tsx` において、プロフィール設定と組織設定をタブで切り替えるUIを構築
+   - ユーザーの権限（owner / admin）を判定し、該当する権限を持つ場合のみ「組織設定」タブを表示するようアクセス制御を追加
+
+2. **組織設定と招待コード表示・再発行機能**
+   - `src/app/[slug]/settings/organization-settings.tsx` を新規作成し、設定画面UIを実装
+   - `src/actions/invitation.ts` を新規作成し、招待コードの取得・再生成処理を行うServer Actionを実装
+
+3. **パッケージの更新と型エラーの改善**
+   - `@supabase/ssr`等の依存モジュールをアップデートし、RPC関数の型推論が改善されたため、`@ts-expect-error`のコメントを削除
+   - `src/app/[slug]/page.tsx` での型アサーションを適切に修正

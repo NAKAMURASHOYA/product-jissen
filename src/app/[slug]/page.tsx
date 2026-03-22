@@ -101,7 +101,7 @@ export default async function OrganizationHomePage({
     .limit(20);
 
   const endorsements: TimelineEndorsement[] =
-    ((endorsementsData ?? []) as EndorsementRow[]).map((e) => ({
+    ((endorsementsData ?? []) as unknown as EndorsementRow[]).map((e) => ({
       id: e.id,
       message: e.message,
       created_at: e.created_at,

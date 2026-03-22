@@ -42,7 +42,6 @@ export async function endorseUserAction(
 
   // 4. RPC呼び出し: endorse_user
   // DB関数定義: p_receiver_id, p_skill_name, p_message, p_organization_id, p_sender_id
-  // @ts-expect-error - Supabase RPC型定義が正しく推論されない場合の暫定対応
   const { error } = await supabase.rpc('endorse_user', {
     p_receiver_id: receiverId,
     p_skill_name: skillName,
