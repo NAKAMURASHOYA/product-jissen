@@ -1,53 +1,47 @@
-import { createClient } from "@/lib/supabase/server";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Mail, Shield } from "lucide-react";
-import { notFound } from "next/navigation";
-
-type UserSkillRow = {
-  endorsement_count: number;
-  skills: { id: string; name: string } | null;
-};
-
-type MemberUser = {
-  id: string;
-  display_name: string | null;
-  avatar_url: string | null;
-  email: string;
-  user_skills: UserSkillRow[];
-};
-
-type MemberRow = {
-  role: string;
-  users: MemberUser | null;
-};
+import { createClient } from "@/lib/supabase/server"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Mail, Shield } from "lucide-react"
+import { notFound } from "next/navigation"
+import type { QueryData } from "@supabase/supabase-js"
+import { MemberFilters } from "./member-filters"
 
 export default async function MembersPage({
   params,
+  searchParams,
 }: {
-  params: { slug: string };
+  params: { slug: string }
+  searchParams: { q?: string; dept?: string }
 }) {
-  const supabase = createClient();
+  const supabase = createClient()
+  const keyword = searchParams.q?.trim() ?? ""
+  const deptId = searchParams.dept ?? ""
 
-  // 1. 組織IDの取得
+  // 1. 組織情報取得
   const { data: organization } = await supabase
     .from("organizations")
     .select("id, name")
     .eq("slug", params.slug)
-    .single();
+    .single()
 
   if (!organization) {
-    return notFound();
+    return notFound()
   }
 
-  const org = organization as { id: string; name: string };
+  // 2. 組織内の部署一覧取得
+  const { data: departments } = await supabase
+    .from("departments")
+    .select("id, name")
+    .eq("organization_id", organization.id)
+    .order("name")
 
-  // 2. メンバー一覧の取得（スキルバッジ含む）
-  const { data: membersData } = await supabase
+  // 3. メンバー一覧クエリ (QueryData で型推論)
+  const membersQuery = supabase
     .from("organization_members")
     .select(`
       role,
+      department_id,
       users (
         id,
         display_name,
@@ -62,9 +56,26 @@ export default async function MembersPage({
         )
       )
     `)
-    .eq("organization_id", org.id);
+    .eq("organization_id", organization.id)
 
-  const members = (membersData ?? []) as MemberRow[];
+  type MembersQueryResult = QueryData<typeof membersQuery>
+
+  // 4. キーワード検索 (display_name or email)
+  const filteredQuery = keyword
+    ? membersQuery.or(
+        `users.display_name.ilike.%${keyword}%,users.email.ilike.%${keyword}%`,
+        { foreignTable: "users" }
+      )
+    : membersQuery
+
+  // 5. 部署フィルター
+  const finalQuery = deptId
+    ? filteredQuery.eq("department_id", deptId)
+    : filteredQuery
+
+  const { data: membersData } = await finalQuery
+
+  const members: MembersQueryResult = membersData ?? []
 
   return (
     <div className="space-y-6">
@@ -75,16 +86,30 @@ export default async function MembersPage({
         </div>
       </div>
 
+      {/* 検索・フィルターエリア */}
+      <MemberFilters
+        departments={departments ?? []}
+        defaultQuery={keyword}
+        defaultDept={deptId}
+      />
+
+      {/* 検索結果ゼロ時のフォールバック */}
+      {members.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+          <p className="text-base font-medium">メンバーが見つかりませんでした</p>
+          <p className="text-sm mt-1">検索条件を変えてお試しください。</p>
+        </div>
+      )}
+
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {members.map((member) => {
-          if (!member.users) return null;
-          const user = member.users;
+          if (!member.users) return null
+          const user = member.users
 
-          // スキルを獲得数の多い順にソートしてトップ5を取得
           const topSkills = (user.user_skills ?? [])
             .filter((us) => us.skills !== null)
             .sort((a, b) => b.endorsement_count - a.endorsement_count)
-            .slice(0, 5);
+            .slice(0, 5)
 
           return (
             <Card key={user.id} className="overflow-hidden">
@@ -149,9 +174,9 @@ export default async function MembersPage({
                 </div>
               </CardContent>
             </Card>
-          );
+          )
         })}
       </div>
     </div>
-  );
+  )
 }

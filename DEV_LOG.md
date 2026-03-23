@@ -353,3 +353,7 @@ src/
 3. **パッケージの更新と型エラーの改善**
    - `@supabase/ssr`等の依存モジュールをアップデートし、RPC関数の型推論が改善されたため、`@ts-expect-error`のコメントを削除
    - `src/app/[slug]/page.tsx` での型アサーションを適切に修正
+
+## 2026-03-23 (続き)
+
+- [2026-03-23 12:00] **メンバー一覧の検索・フィルタリング機能**: `member-filters.tsx`（Client Component）を新規作成しURL SearchParamsでキーワード検索・部署フィルターを実装。`members/page.tsx` を `QueryData` で型安全化し、`ilike` 検索・部署絞り込み・0件時フォールバック表示を追加。
