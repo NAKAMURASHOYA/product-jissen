@@ -372,11 +372,15 @@ src/
    - `src/components/ui/mobile-nav.tsx` を新規作成し、モバイル向けサイドバーナビゲーションを構築
    - `src/app/[slug]/layout.tsx` にモバイルナビゲーションを組み込み
 
-3. **スキル管理・表示の強化**
+3. **プロフィール画像設定機能の追加**
+   - プロフィール画像のアップロード（変更）機能を実装
+   - 画像未設定時のデフォルトプロフィール画像の表示設定を追加
+   - 関連するコンポーネント（`src/app/[slug]/settings/profile-form.tsx` 等）を改修
+
+4. **スキル管理・表示の強化**
    - `src/actions/skill.ts` と `src/components/ui/skill/` 関連コンポーネントを追加
    - スキルのドラッグ＆ドロップによる並び替え機能や、表示順(`display_order`)の追加（スキーマ `src/lib/schema.ts` も更新）
-   - `src/app/[slug]/settings/profile-form.tsx` 等のプロフィール設定画面に機能追加
 
-4. **UIコンポーネントの調整**
+5. **UIコンポーネントの調整**
    - `avatar.tsx` や `timeline-item.tsx` の改善
    - 新規機能に必要なパッケージの依存関係を追加 (`package.json`, `package-lock.json` の更新)
