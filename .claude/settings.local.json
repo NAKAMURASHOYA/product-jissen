@@ -12,7 +12,10 @@
       "Bash(npm show @supabase/ssr versions --json 2>/dev/null | tail -1 | tr ',' '\\\\n' | grep -E '\"0\\\\.[56789]|\"1\\\\.' | tail -10)",
       "Bash(npm show @supabase/ssr dist-tags 2>/dev/null)",
       "Bash(npm install @supabase/ssr@0.9.0 --save-exact 2>&1)",
-      "Bash(npm install @supabase/ssr@0.6.1 @supabase/supabase-js@2.45.4 2>&1)"
+      "Bash(npm install @supabase/ssr@0.6.1 @supabase/supabase-js@2.45.4 2>&1)",
+      "Bash(ls -la /mnt/c/Users/Shoya/Documents/techtrain/step3-react/techtrain-step3-common/product-jissen/src/app/\\\\[slug\\\\]/settings/ 2>/dev/null)",
+      "Bash(grep -r \"skillTag\\\\|skill_tag\" /mnt/c/Users/Shoya/Documents/techtrain/step3-react/techtrain-step3-common/product-jissen/src --include=\"*.ts\" --include=\"*.tsx\" 2>/dev/null | head -20)",
+      "Bash(npx shadcn@latest add sheet --yes 2>&1)"
     ]
   }
 }

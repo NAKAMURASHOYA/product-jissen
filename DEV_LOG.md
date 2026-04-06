@@ -357,3 +357,26 @@ src/
 ## 2026-03-23 (続き)
 
 - [2026-03-23 12:00] **メンバー一覧の検索・フィルタリング機能**: `member-filters.tsx`（Client Component）を新規作成しURL SearchParamsでキーワード検索・部署フィルターを実装。`members/page.tsx` を `QueryData` で型安全化し、`ilike` 検索・部署絞り込み・0件時フォールバック表示を追加。
+
+## 2026-04-06
+
+### 公開プロフィール・モバイルナビ・スキル管理の実装
+
+#### 完了した作業
+
+1. **公開プロフィール機能の追加**
+   - `src/app/u/` を新規追加し、`display_id`ベースでアクセス可能な公開プロフィール画面を実装
+
+2. **モバイルナビゲーションの実装**
+   - Shadcn UIの `sheet.tsx` を追加
+   - `src/components/ui/mobile-nav.tsx` を新規作成し、モバイル向けサイドバーナビゲーションを構築
+   - `src/app/[slug]/layout.tsx` にモバイルナビゲーションを組み込み
+
+3. **スキル管理・表示の強化**
+   - `src/actions/skill.ts` と `src/components/ui/skill/` 関連コンポーネントを追加
+   - スキルのドラッグ＆ドロップによる並び替え機能や、表示順(`display_order`)の追加（スキーマ `src/lib/schema.ts` も更新）
+   - `src/app/[slug]/settings/profile-form.tsx` 等のプロフィール設定画面に機能追加
+
+4. **UIコンポーネントの調整**
+   - `avatar.tsx` や `timeline-item.tsx` の改善
+   - 新規機能に必要なパッケージの依存関係を追加 (`package.json`, `package-lock.json` の更新)

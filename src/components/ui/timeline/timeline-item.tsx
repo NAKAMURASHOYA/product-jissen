@@ -40,8 +40,8 @@ export function TimelineItem({ item }: { item: Endorsement }) {
           {/* 送信者アバター */}
           <Avatar className="h-10 w-10 border">
             <AvatarImage src={item.sender.avatar_url || ""} />
-            <AvatarFallback>
-              {item.sender.display_name?.charAt(0) || "?"}
+            <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+              {item.sender.display_name?.charAt(0).toUpperCase() || "?"}
             </AvatarFallback>
           </Avatar>
 
@@ -56,8 +56,8 @@ export function TimelineItem({ item }: { item: Endorsement }) {
               <div className="flex items-center gap-2">
                 <Avatar className="h-6 w-6 border">
                   <AvatarImage src={item.receiver.avatar_url || ""} />
-                  <AvatarFallback className="text-[10px]">
-                    {item.receiver.display_name?.charAt(0) || "?"}
+                  <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-semibold">
+                    {item.receiver.display_name?.charAt(0).toUpperCase() || "?"}
                   </AvatarFallback>
                 </Avatar>
                 <span className="font-semibold text-foreground">

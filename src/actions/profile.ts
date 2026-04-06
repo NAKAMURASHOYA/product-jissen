@@ -4,10 +4,69 @@ import { createClient } from "@/lib/supabase/server"
 import { profileSchema, type ProfileInput } from "@/lib/schema"
 import { revalidatePath } from "next/cache"
 
-type ActionResponse = {
+type ActionResponse<T = null> = {
   success: boolean
   message: string
+  data?: T
   errors?: Record<string, string[]>
+}
+
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"]
+const MAX_SIZE = 2 * 1024 * 1024 // 2MB
+
+export async function uploadAvatarAction(
+  formData: FormData
+): Promise<ActionResponse<{ publicUrl: string }>> {
+  const supabase = createClient()
+
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return { success: false, message: "認証が必要です" }
+  }
+
+  const file = formData.get("file") as File | null
+  if (!file || file.size === 0) {
+    return { success: false, message: "ファイルを選択してください" }
+  }
+
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return { success: false, message: "JPEG・PNG・WebP 形式のみアップロードできます" }
+  }
+
+  if (file.size > MAX_SIZE) {
+    return { success: false, message: "ファイルサイズは2MB以下にしてください" }
+  }
+
+  const ext = file.type.split("/")[1].replace("jpeg", "jpg")
+  const path = `${user.id}/${Date.now()}.${ext}`
+
+  const { error: uploadError } = await supabase.storage
+    .from("avatars")
+    .upload(path, file, { upsert: true, contentType: file.type })
+
+  if (uploadError) {
+    console.error("Avatar upload error:", uploadError)
+    return { success: false, message: "アップロードに失敗しました" }
+  }
+
+  const { data: { publicUrl } } = supabase.storage
+    .from("avatars")
+    .getPublicUrl(path)
+
+  // users テーブルの avatar_url を更新
+  const { error: updateError } = await supabase
+    .from("users")
+    .update({ avatar_url: publicUrl })
+    .eq("id", user.id)
+
+  if (updateError) {
+    console.error("Avatar URL update error:", updateError)
+    return { success: false, message: "URLの保存に失敗しました" }
+  }
+
+  revalidatePath("/", "layout")
+
+  return { success: true, message: "アバターを更新しました", data: { publicUrl } }
 }
 
 export async function updateProfileAction(data: ProfileInput): Promise<ActionResponse> {

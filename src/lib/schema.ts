@@ -91,3 +91,11 @@ export const endorsementSchema = z.object({
 
 export type SkillTagInput = z.infer<typeof skillTagSchema>
 export type EndorsementInput = z.infer<typeof endorsementSchema>
+
+export const reorderSkillsSchema = z.array(
+  z.object({
+    id: z.string().uuid(),
+    display_order: z.number().int().min(0),
+  })
+)
+export type ReorderSkillsInput = z.infer<typeof reorderSkillsSchema>

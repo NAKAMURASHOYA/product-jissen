@@ -23,13 +23,17 @@ export interface AvatarImageProps
   extends React.ImgHTMLAttributes<HTMLImageElement> {}
 
 const AvatarImage = React.forwardRef<HTMLImageElement, AvatarImageProps>(
-  ({ className, ...props }, ref) => (
-    <img
-      ref={ref}
-      className={cn("aspect-square h-full w-full object-cover", className)}
-      {...props}
-    />
-  )
+  ({ className, src, ...props }, ref) => {
+    if (!src) return null
+    return (
+      <img
+        ref={ref}
+        src={src}
+        className={cn("absolute inset-0 aspect-square h-full w-full object-cover", className)}
+        {...props}
+      />
+    )
+  }
 )
 AvatarImage.displayName = "AvatarImage"
 
@@ -41,7 +45,7 @@ const AvatarFallback = React.forwardRef<HTMLSpanElement, AvatarFallbackProps>(
     <span
       ref={ref}
       className={cn(
-        "flex h-full w-full items-center justify-center text-xs font-medium",
+        "absolute inset-0 flex items-center justify-center text-xs font-medium",
         className
       )}
       {...props}
